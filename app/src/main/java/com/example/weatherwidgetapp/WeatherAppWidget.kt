@@ -97,13 +97,14 @@ class RefreshAction : ActionCallback {
             val response = RetrofitClient.instance.getCurrentWeather()
             val newTemp = response.current.temperature_2m.toInt()
             
-            updateAppWidgetState(context, glanceId) { prefs ->
-                prefs[tempKey] = newTemp
+            updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { prefs ->
+                prefs.toMutablePreferences().apply {
+                    this[tempKey] = newTemp
+                }
             }
             WeatherAppWidget().update(context, glanceId)
         } catch (e: Exception) {
             e.printStackTrace()
-            // On failure, maybe set a specific error temp or do nothing
         }
     }
 }
